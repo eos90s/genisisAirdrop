@@ -8,4 +8,10 @@ if (!keyProvider) {
   process.exit();
 }
 
-execAirdrop(keyProvider).then(() => process.exit())
+var sendAcc = process.argv[3];
+if (!sendAcc) {
+  console.log("sendAcc must supply");
+  process.exit();
+}
+
+execAirdrop(keyProvider, sendAcc).then(() => process.exit())
