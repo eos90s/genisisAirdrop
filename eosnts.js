@@ -17,18 +17,18 @@ export async function eosTransfer(sendAcc, account, amount, keyProvider) {
             broadcast: true,
             sign: true
           };
-  ntsContract.transfer(sendAcc, account, amount, 'www..com', options).then(async obj=>{
-    await setCompleteRecord(account).then(val=>{},err=>
-    {
-      console.log(`修改账号${account}状态出错：${err}`)
-      process.exit();
-    })
-  },err=>{
-    console.log(`转账${account}错误${err}`)
-    process.exit();
-  })
+  try {
+    await ntsContract.transfer(sendAcc, account, amount, 'www..com', options);
+  } catch (e) {
+    console.log(`转账${account}失败： ${e}`)
+  }
   
-
+  try {
+    await setCompleteRecord(account);
+  } catch (err) {
+    console.log(`修改转账${account}状态错误${err}`)
+    process.exit();
+  }
 }
 
 
@@ -61,7 +61,6 @@ export async function execAirdrop(keyProvider, sendAcc) {
       }
     }catch(e){
        console.log(e);
-       process.exit();
     }
 
 }

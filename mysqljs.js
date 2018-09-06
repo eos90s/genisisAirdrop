@@ -42,34 +42,21 @@ export async function getEosAccounts(begin,limit){
 	})
 }
 
-
-export async  function setCompleteRecord(eosAccount){
-	return new Promise(function(resolve,reject){
-		try{
-			//connection.connect();
-
-			//pool.getConnection(function(err, connection){
- 		//		if(err) throw reject(err)
-
-				connection.query(`UPDATE eos_creation_account SET is_already_send = '1' WHERE eos_name = '${eosAccount}' and is_already_send != 1`, function (error, results, fields) {
-										
-					if (error) {
-						console.log(`update ${eosAccount} error: ${error}`);
-						process.exit();
-					}
-
-					resolve(`eosAccount:${eosAccount} mark success`);
-				})
-				
- 		//	})
-
-			//console.log(`UPDATE eos_creation_account SET is_already_send = '1' WHERE eos_name = '${eosAccount}'`)
-			
-		}catch(e){
-			console.log(`UPDATE eos_creation_account SET is_already_send = '1' WHERE eos_name = '${eosAccount}',err：${e}`)
-			process.exit();
-		}
-
-	})
+/**
+ * This function will update eos account transfer state in mysql
+ * @params eosAccount 	The eos account need to udpate
+ * @return return a Promise object
+ */
+export function setCompleteRecord(eosAccount){
+	return new Promise((resolve, reject) => {
+		let sql = `UPDATE eos_creation_account SET is_already_send = '1' WHERE eos_name = '${eosAccount}' and is_already_send != 1`;
+		connection.query(sql, (error) => {
+			if (error) {
+				console.log(`UPDATE eos_creation_account SET is_already_send = '1' WHERE eos_name = '${eosAccount}',err：${error}`)
+				reject(error)
+			}
+			resolve()
+		});
+	});
 }
 
